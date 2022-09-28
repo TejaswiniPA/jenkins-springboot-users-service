@@ -12,11 +12,11 @@ pipeline{
 				sh 'mvn compile'
 		}
 	}
-	stage('quality'){
-			steps{
-				sh 'mvn sonar:sonar'
-		}
-	}
+	// stage('quality'){
+		//	steps{
+			//	sh 'mvn sonar:sonar'
+		//}
+	//} 
 		stage('test'){
 			steps{
 				sh 'mvn test'
@@ -27,6 +27,11 @@ pipeline{
 				sh 'mvn package -DskipTests=true'
 		}
 	}
+	stage('dockersize'){
+			steps{
+				sh 'docker build -t user-service:latest .'
+		}
+		}
 	
 }
 }
