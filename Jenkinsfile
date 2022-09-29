@@ -39,6 +39,7 @@ pipeline{
 				sh 'curl -i http://localhost:7070/api/users'
 		}
 	}
+}
 	post{
 	    always{
 	        sh'docker stop tmp-user-service-container'
@@ -47,5 +48,5 @@ pipeline{
 	}
 
 	
-  }
-}
+ }
+
