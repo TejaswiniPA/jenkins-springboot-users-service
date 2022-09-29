@@ -41,14 +41,14 @@ pipeline{
 				sh "docker build -t ${DOCKER_REPO}/${DOCKER_IMG_NAME}:latest -t ${DOCKER_REPO}/${DOCKER_IMG_NAME}:${env.BUILD_ID} ."
 		}
 	}
-	//stage('integration tests'){
-		//	steps{
-			//echo 'running the tmp-user-service-container for integration testing...'
-				//sh "docker run -dp 7070:8080 --rm --name ${DOCKER_TMP_CONTAINER_NAME} ${DOCKER_REPO}/${DOCKER_IMG_NAME}:latest"
-				//sleep 30
-				//sh 'curl -i http://localhost:7070/api/users'
-		//}
-	//}
+	stage('integration tests'){
+			steps{
+			echo 'running the tmp-user-service-container for integration testing...'
+				sh "docker run -dp 7070:8080 --rm --name ${DOCKER_TMP_CONTAINER_NAME} ${DOCKER_REPO}/${DOCKER_IMG_NAME}:latest"
+				sleep 30
+				sh 'curl -i http://localhost:7070/api/users'
+		}
+	}
 	stage('docker publish'){
 	    steps{
 	        withDockerRegistry([ credentialsId: 'docker_creds',url: '']){
