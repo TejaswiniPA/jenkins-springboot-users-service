@@ -51,8 +51,9 @@ pipeline{
 }
 	post{
 	    always{
-	    echo 'stopping and removing the tmp-user-serivce-container...'
+	    echo 'stopping and removing the tmp-user-service-container...'
 	        sh 'docker stop ${DOCKER_TMP_CONTAINER_NAME}'
+	        sh 'docker rmi ${DOCKER_IMG_NAME}:latest ${DOCKER_IMG_NAME}:${env.BUILD_ID}'
 	    }
 
 	}
