@@ -34,7 +34,7 @@ pipeline{
 				sh 'mvn package -DskipTests=true'
 		}
 	}
-	stage('dockersize'){
+	stage('dockerize'){
 			steps{
 			echo 'building the docker for user service...'
 				sh "docker build -t ${DOCKER_IMG_NAME}:latest -t ${DOCKER_IMG_NAME}:${env.BUILD_ID} ."
