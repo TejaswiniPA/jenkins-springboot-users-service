@@ -4,6 +4,7 @@ pipeline{
 	environment{
 	    DOCKER_IMG_NAME = 'user-service'
 	    DOCKER_TMP_CONTAINER_NAME='tmp-user-service-container'
+	    DOCKER_REPO='tejaswini20angadi'	
 	}
 
 	
@@ -43,17 +44,28 @@ pipeline{
 	stage('integration tests'){
 			steps{
 			echo 'running the tmp-user-service-container for integration testing...'
-				sh 'docker run -dp 7070:8080 --rm --name ${DOCKER_TMP_CONTAINER_NAME} ${DOCKER_IMG_NAME}:latest'
+				sh "docker run -dp 7070:8080 --rm --name ${DOCKER_TMP_CONTAINER_NAME} ${DOCKER_REPO}/${DOCKER_IMG_NAME}:latest"
 				sleep 30
 				sh 'curl -i http://localhost:7070/api/users'
 		}
 	}
+	stage('docker publish'){
+	    steps{
+	        withDockerRegistry([ credentialsId: 'docker_creds',url: '']){
+	            sh "docker push ${DOCKER_REPO}/${DOCKER_IMG_NAME}:${env.BUILD_ID}"
+	            sh "docker push ${DOCKER_REPO}/${DOCKER_IMG_NAME}:latest"
+	       }
+
+	    }
+
+	}
+
 }
 	post{
 	    always{
 	    echo 'stopping and removing the tmp-user-service-container...'
 	        sh 'docker stop ${DOCKER_TMP_CONTAINER_NAME}'
-	        sh "docker rmi ${DOCKER_IMG_NAME}:latest ${DOCKER_IMG_NAME}:${env.BUILD_ID}"
+	        sh "docker rmi ${DOCKER_IMG_NAME}:latest ${DOCKER_REPO}/${DOCKER_IMG_NAME}:${env.BUILD_ID}"
 	    }
 
 	}
